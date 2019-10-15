@@ -4,7 +4,7 @@ import torch
 from torch import nn, optim
 from torch.autograd import Variable
 import torch.nn.functional as F
-
+# import sys
 # The Continuous Bag-of-Words model (CBOW) is frequently used in NLP deep learning. It is a model that tries to predict words given the context of a few words before and a few words after the target word. This is distinct from language modeling, since CBOW is not sequential and does not have to be probabilistic. Typcially, CBOW is used to quickly train word embeddings, and these embeddings are used to initialize the embeddings of some more complicated model. Usually, this is referred to as pretraining embeddings. It almost always helps performance a couple of percent.
 
 CONTEXT_SIZE = 2  # 2 words to the left, 2 to the right
@@ -17,7 +17,7 @@ we conjure the spirits of the computer with our spells.""".split()
 
 vocab = set(raw_text)
 word_to_idx = {word: i for i, word in enumerate(vocab)}
-
+# print(word_to_idx)
 data = []
 for i in range(CONTEXT_SIZE, len(raw_text) - CONTEXT_SIZE):
     context = [
@@ -25,7 +25,7 @@ for i in range(CONTEXT_SIZE, len(raw_text) - CONTEXT_SIZE):
     ]
     target = raw_text[i]
     data.append((context, target))
-
+# print(data)
 
 class CBOW(nn.Module):
     def __init__(self, n_word, n_dim, context_size):
@@ -37,8 +37,11 @@ class CBOW(nn.Module):
 
     def forward(self, x):
         x = self.embedding(x)
+        # print(x.shape)
         x = self.project(x)
+        # print(x.shape)
         x = torch.sum(x, 0, keepdim=True)
+        # print(x.shape)
         x = self.linear1(x)
         x = F.relu(x, inplace=True)
         x = self.linear2(x)
@@ -61,13 +64,14 @@ for epoch in range(100):
         context, target = word
         context = Variable(torch.LongTensor([word_to_idx[i] for i in context]))
         target = Variable(torch.LongTensor([word_to_idx[target]]))
+        # print(context, target)
         if torch.cuda.is_available():
             context = context.cuda()
             target = target.cuda()
         # forward
         out = model(context)
         loss = criterion(out, target)
-        running_loss += loss.data[0]
+        running_loss += loss.data
         # backward
         optimizer.zero_grad()
         loss.backward()

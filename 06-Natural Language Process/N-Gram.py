@@ -27,7 +27,7 @@ trigram = [((test_sentence[i], test_sentence[i + 1]), test_sentence[i + 2])
 vocb = set(test_sentence)
 word_to_idx = {word: i for i, word in enumerate(vocb)}
 idx_to_word = {word_to_idx[word]: word for word in word_to_idx}
-
+# print(trigram)
 
 class NgramModel(nn.Module):
     def __init__(self, vocb_size, context_size, n_dim):
@@ -59,10 +59,11 @@ for epoch in range(100):
         word, label = data
         word = Variable(torch.LongTensor([word_to_idx[i] for i in word]))
         label = Variable(torch.LongTensor([word_to_idx[label]]))
+        # print(word, label)
         # forward
         out = ngrammodel(word)
         loss = criterion(out, label)
-        running_loss += loss.data[0]
+        running_loss += loss.data
         # backward
         optimizer.zero_grad()
         loss.backward()
@@ -73,5 +74,6 @@ word, label = trigram[3]
 word = Variable(torch.LongTensor([word_to_idx[i] for i in word]))
 out = ngrammodel(word)
 _, predict_label = torch.max(out, 1)
-predict_word = idx_to_word[predict_label.data[0][0]]
+# print((predict_label.data)[0].numpy())
+predict_word = idx_to_word[int( (predict_label.data)[0].numpy() )]
 print('real word is {}, predict word is {}'.format(label, predict_word))
