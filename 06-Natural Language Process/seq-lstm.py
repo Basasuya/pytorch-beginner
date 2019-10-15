@@ -95,13 +95,15 @@ for epoch in range(300):
         word, tag = data
         word_list = make_sequence(word, word_to_idx)
         tag = make_sequence(tag, tag_to_idx)
+
+        # print(word_list, tag)
         if torch.cuda.is_available():
             word_list = word_list.cuda()
             tag = tag.cuda()
         # forward
         out = model(word_list, word)
         loss = criterion(out, tag)
-        running_loss += loss.data[0]
+        running_loss += loss.data
         # backward
         optimizer.zero_grad()
         loss.backward()

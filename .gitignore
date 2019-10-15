@@ -5,3 +5,5 @@ __pycache__
 .vscode
 logs/
 datasets
+dc_img/
+mlp_img

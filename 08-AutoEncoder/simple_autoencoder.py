@@ -28,10 +28,10 @@ learning_rate = 1e-3
 
 img_transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    transforms.Normalize([0.5], [0.5])
 ])
 
-dataset = MNIST('./data', transform=img_transform)
+dataset = MNIST('../datasets', transform=img_transform)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
@@ -76,7 +76,7 @@ for epoch in range(num_epochs):
         optimizer.step()
     # ===================log========================
     print('epoch [{}/{}], loss:{:.4f}'
-          .format(epoch + 1, num_epochs, loss.data[0]))
+          .format(epoch + 1, num_epochs, loss.data))
     if epoch % 10 == 0:
         pic = to_img(output.cpu().data)
         save_image(pic, './mlp_img/image_{}.png'.format(epoch))
