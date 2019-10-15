@@ -14,10 +14,10 @@ num_epoches = 20
 
 # 下载训练集 MNIST 手写数字训练集
 train_dataset = datasets.MNIST(
-    root='./data', train=True, transform=transforms.ToTensor(), download=True)
+    root='../datasets', train=True, transform=transforms.ToTensor(), download=True)
 
 test_dataset = datasets.MNIST(
-    root='./data', train=False, transform=transforms.ToTensor())
+    root='../datasets', train=False, transform=transforms.ToTensor())
 
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
